@@ -1,30 +1,18 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * Generated with the TypeScript template
- * https://github.com/react-native-community/react-native-template-typescript
- *
- * @format
- */
-
-import React from 'react';
-
-
-import Home from './src/screens/HomeScreen';
-
 import { createAppContainer } from 'react-navigation'
 import { createStackNavigator } from 'react-navigation-stack';
 
-declare const global: {HermesInternal: null | {}};
+import SearchScreen from './src/screens/SearchScreen';
+import DetailScreen from './src/screens/DetailScreen';
 
+const navigator = createStackNavigator({
+  Search: SearchScreen,
+  Details: DetailScreen,
+},
+{
+  initialRouteName: "Search",
+  defaultNavigationOptions:{
+    title: 'Food app'
+  }
+});
 
-const App = () => {
-  return (
-    <Home />
-  );
-};
-
-
-
-export default App;
+export default createAppContainer(navigator);
