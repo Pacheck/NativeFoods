@@ -5,19 +5,26 @@ import SearchBar from '../components/SearchBar';
 
 import yelpi from '../api/yelpi';
 
+
+
 const SearchScreen = () => {
     const [term, setTerm] = useState('');
-    const [results, setResults] = useState([])
+    const [results, setResults] = useState([]);
+    const [errorMessage, setErrorMessage] = useState('');
 
     const searchAPI = async() => {
-        const results = await yelpi.get('/search', {
-            params: {
-                limit: 50,
-                term,
-                location: 'san jose',
-            }
-        });
-        setResults(results.data.businesses);
+        try {
+            const results = await yelpi.get('/search', {
+                params: {
+                    limit: 50,
+                    term,
+                    location: 'san jose',
+                }
+            });
+            setResults(results.data.businesses);
+        }catch(e){
+            setErrorMessage('Something went wrong')
+        }
     }
 
     return <View>
@@ -26,6 +33,7 @@ const SearchScreen = () => {
             onTermChange={setTerm}
             onTermSubmitted={searchAPI}
         />
+        { errorMessage ? <Text>{errorMessage}</Text> : null }
         <Text>We have found {results.length} results</Text>
     </View>
 }
