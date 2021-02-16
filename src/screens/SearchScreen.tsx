@@ -1,43 +1,38 @@
-import React, { useState } from 'react'
-import { Text, View, StyleSheet } from 'react-native'
+import React, {useState} from 'react';
+import {Text, View, StyleSheet} from 'react-native';
+import ResultList from '../components/ResultList/ResultList';
 
-import SearchBar from '../components/SearchBar';
-
-import yelpi from '../api/yelpi';
-
-
+import SearchBar from '../components/SearchBar/SearchBar';
+import useResults from '../hooks/useResults';
 
 const SearchScreen = () => {
-    const [term, setTerm] = useState('');
-    const [results, setResults] = useState([]);
-    const [errorMessage, setErrorMessage] = useState('');
+  const [term, setTerm] = useState('');
+  const [searchAPI, results, errorMessage] = useResults();
 
-    const searchAPI = async() => {
-        try {
-            const results = await yelpi.get('/search', {
-                params: {
-                    limit: 50,
-                    term,
-                    location: 'san jose',
-                }
-            });
-            setResults(results.data.businesses);
-        }catch(e){
-            setErrorMessage('Something went wrong')
-        }
-    }
+  const filterResultByPrice = (price: string) => {
+    return results.filter((result: any) => {
+        return result.price === price;
+    })
+  }
 
-    return <View>
-        <SearchBar 
-            term={term} 
-            onTermChange={setTerm}
-            onTermSubmitted={searchAPI}
-        />
-        { errorMessage ? <Text>{errorMessage}</Text> : null }
-        <Text>We have found {results.length} results</Text>
+  return (
+    <View>
+      <SearchBar
+        term={term}
+        onTermChange={setTerm}
+        onTermSubmitted={() => searchAPI(term)}
+      />
+
+      {errorMessage ? <Text>{errorMessage}</Text> : null}
+      <Text>We have found {results.length} results</Text>
+
+      <ResultList results={filterResultByPrice("$")} title="Cost Effective" />
+      <ResultList results={filterResultByPrice("$$")} title="Bit Pricier" />
+      <ResultList results={filterResultByPrice("$$$")} title="Big Spender" />
     </View>
-}
+  );
+};
 
-const styles = StyleSheet.create({})
+const styles = StyleSheet.create({});
 
-export default SearchScreen
+export default SearchScreen;
