@@ -23,10 +23,11 @@ const DetailScreen = ({ navigation }: IDetailNavProp) => {
   }
 
   return (
-    <View>
-      <Text>{result.name}</Text>
+    <View style={styles.Container}>
+      <Text style={styles.ImageTitle}>{result.name}</Text>
       <FlatList
         data={result.photos}
+        showsVerticalScrollIndicator={false}
         keyExtractor={(photo) => photo}
         renderItem={({ item }) => {
           return <Image style={styles.Image} source={{ uri: item }} />;
@@ -40,6 +41,17 @@ const styles = StyleSheet.create({
   Image: {
     width: 300,
     height: 200,
+    marginBottom: 20,
+    borderRadius: 4,
+  },
+  ImageTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginVertical: 10,
+  },
+  Container: {
+    alignItems: 'center',
+    flex: 1,
   },
 });
 
